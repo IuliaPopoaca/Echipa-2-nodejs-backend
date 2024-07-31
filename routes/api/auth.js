@@ -33,3 +33,35 @@ router.get("/confirm", async (req, res) => {
     res.status(400).send(error.message);
   }
 });
+
+router.post("/login", validateBody(schemas.loginSchema), login);
+
+router.post("/refresh", validateBody(schemas.refreshSchema), refresh);
+
+router.get("/current", authenticate, getCurrent);
+
+router.post("/logout", authenticate, logout);
+
+router.patch(
+  "/theme",
+  authenticate,
+  validateBody(schemas.themeSchema),
+  updateTheme
+);
+
+router.put(
+  "/profile",
+  authenticate,
+  uploadCloud.single("avatarURL"),
+  validateBody(schemas.registerSchema),
+  updateProfile
+);
+
+router.post(
+  "/help",
+  authenticate,
+  validateBody(schemas.helpSchema),
+  getHelpEmail
+);
+
+module.exports = router;
