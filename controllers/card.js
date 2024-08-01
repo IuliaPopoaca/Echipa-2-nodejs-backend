@@ -17,3 +17,40 @@ async function addNew(req, res) {
   });
   res.status(201).json(result);
 }
+
+async function removeById(req, res) {
+  const { cardId } = req.params;
+  const result = await Card.findByIdAndRemove(cardId);
+  if (!result) throw HttpError(404);
+  res.json(result);
+}
+
+async function updateById(req, res) {
+  const { cardId } = req.params;
+  const result = await Card.findByIdAndUpdate(cardId, req.body, {
+    new: true,
+  });
+  if (!result) throw HttpError(404);
+  res.json(result);
+}
+
+async function setNewCardOwner(req, res) {
+  const { cardId, columnId } = req.params;
+  const result = await Card.findByIdAndUpdate(
+    cardId,
+    { owner: columnId },
+    {
+      new: true,
+    }
+  );
+  if (!result) throw HttpError(404);
+  res.json(result);
+}
+
+module.exports = {
+  getById: controllerWrapper(getById),
+  addNew: controllerWrapper(addNew),
+  removeById: controllerWrapper(removeById),
+  updateById: controllerWrapper(updateById),
+  setNewCardOwner: controllerWrapper(setNewCardOwner),
+};
